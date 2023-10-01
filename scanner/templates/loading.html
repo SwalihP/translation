@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Recording Animation</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #1A5276;
+            margin: 0;
+        }
+
+        .voice-recording-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .recording-icon {
+            width: 100px;
+            height: 100px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .outer-circle {
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            border-radius: 50%;
+            position: absolute;
+            bottom: 30%;
+            animation: pulsate 1s ease-in-out infinite;
+        }
+
+        .inner-circle {
+            width: 60%;
+            height: 60%;
+            background-color: white;
+            border-radius: 50%;
+            position: absolute;
+            bottom: 50%;
+            left: 20%;
+        }
+
+        @keyframes pulsate {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.6;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        #record-button {
+            background-color: #FFD700;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 3px
+        }
+    </style>
+</head>
+<body>
+    <div class="voice-recording-container">
+        <div class="recording-icon" id="recording-icon">
+            <div class="outer-circle"></div>
+            <div class="inner-circle"></div>
+        </div>
+<!--        <button id="record-button" href="{% url 'application:audioextract' %}" onclick="toggleRecording()">Hold to Record</button>-->
+        <a class="btn btn-danger" onclick="toggleRecording()" id="record-button" href="{% url 'application:audioextract' %}">Hold to Record</a>
+    </div>
+    <script>
+        let isRecording = false;
+
+        function toggleRecording() {
+            const recordingIcon = document.getElementById('recording-icon');
+            const recordButton = document.getElementById('record-button');
+
+            if (!isRecording) {
+                // Start recording animation
+                recordingIcon.style.animationPlayState = 'running';
+                recordButton.textContent = 'Recording...';
+
+                // Add your recording logic here
+
+            } else {
+                // Stop recording animation
+                recordingIcon.style.animationPlayState = 'paused';
+                recordButton.textContent = 'Hold to Record';
+
+                // Add your stop recording logic here
+
+            }
+
+            isRecording = !isRecording;
+        }
+    </script>
+</body>
+</html>

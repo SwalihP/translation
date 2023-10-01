@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<form method="POST" style="color:white;">
+   {% csrf_token %}
+   <div style="margin:5px;font-size:30px">
+      <center>
+{{extracted_text}}
+         </center>
+      </div>
+   &nbsp; &nbsp; &nbsp;
+   <center>
+<a class="btn btn-warning mt-3" href="{% url 'application:translate' %}">GoToTranslate</a>
+   </center>
+</form>
+{% endblock %}

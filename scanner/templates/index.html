@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'style6.css' %}">
+<style>
+  /* Define the fade-in animation */
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  /* Define the fade-out animation */
+  @keyframes fadeOut {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  /* Apply the fade-in and fade-out animations to the "Welcome" text */
+  .fade-in-text {
+    animation: fadeIn 1s ease-in-out forwards; /* Adjust the duration and timing function as needed */
+  }
+
+  .fade-out-text {
+    animation: fadeOut 1s ease-in-out forwards; /* Adjust the duration and timing function as needed */
+  }
+</style>
+<div class="container-fluid">
+  <h1 class="h1 fade-in-text">Welcome</h1>
+  <a class="btn btn-outline-warning btn1 fade-in-text " href="{% url 'application:base' %}">Get Start    </a>
+</div>
+{% endblock %}
+art

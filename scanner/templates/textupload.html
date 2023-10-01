@@ -1,0 +1,224 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'style5.css' %}">
+<form method="POST">
+    {% csrf_token %}
+    <div class="input-container">
+        <label class="form-label" style="color:white;position:fixed;top:35px;" >TEXT</label>
+        <input type="text" id="input" name="t" placeholder="Type something here.."  />
+        <span id="suggestion"></span>
+    </div>
+  <input type="submit" class="btn btn-warning" style="position:fixed;top:75px;right:280px;">
+</form>
+    <!-- Script -->
+    <script>
+        let words = [
+          "Apple",
+          "Pencil",
+          "Pen",
+          "Chair",
+          "Helmet",
+          "Grapes",
+          "Tub",
+          "Trophy",
+          "Cookie",
+          "Donut",
+          "Shirt",
+          "Bat",
+          "Ash",
+          "Bell",
+          "Chat",
+          "Ball",
+          "Eye",
+          "Fish",
+          "Zip",
+          "Game",
+          "Juice",
+          "Orange",
+          "Fan",
+          "Ice",
+          "Hello",
+          "hello",
+          "good morning",
+          "good afternoon",
+          "good evening",
+          "good night",
+          "How are you",
+          "What is your age?",
+"What is your gender?",
+"What is your name",
+"What about you",
+"How would you describe your current employment status?",
+"In which industry do you work?",
+"What is your highest level of education completed?",
+"How often do you travel for leisure each year?",
+"Are you a homeowner or do you rent?",
+"Do you have any children?",
+"How satisfied are you with your current living arrangement?",
+"How would you rate your overall health on a scale of 1 to 10?",
+"What is your preferred mode of transportation for daily commuting?",
+"How often do you dine out each week?",
+"What type of cuisine do you enjoy the most?",
+"Do you have any dietary restrictions or preferences?",
+"How often do you exercise in a week?",
+"What is your preferred type of exercise or physical activity?",
+"How often do you shop online for products or services?",
+"What is your preferred social media platform?",
+"How many hours of screen time do you have per day (TV, computer, smartphone, etc.)?",
+"What is your favorite leisure activity or hobby?",
+"How often do you read books or magazines for leisure?",
+"Have you ever volunteered for a charitable organization?",
+"Do you prefer to save or spend money?",
+"What is your preferred type of vacation (e.g., beach, adventure, cultural)?",
+"How do you typically plan your vacations (e.g., travel agency, online research)?",
+"Have you invested in stocks or other financial instruments?",
+"What is your preferred smartphone brand?",
+"Do you own a smart home device (e.g., Alexa, Google Home)?",
+"How often do you attend live events (e.g., concerts, sports games)?",
+"What is your favorite genre of music?",
+"How often do you watch TV shows or movies on streaming platforms?",
+"Have you ever taken an online course for personal or professional development?",
+"What is your preferred method of communication (e.g., text, phone call, email)?",
+"Do you follow any specific diet plan (e.g., keto, vegan)?",
+"What is your favorite season of the year?",
+"How often do you visit a gym or fitness center?",
+"Do you have a preferred type of coffee or tea?",
+"What is your preferred type of pet (if any)?",
+"How often do you cook meals at home?",
+"Do you consider yourself a morning person or a night owl?",
+"What type of books do you enjoy reading the most (e.g., fiction, non-fiction, mystery)?",
+"Have you ever traveled solo?",
+"Do you enjoy attending live theater performances?",
+"How often do you participate in outdoor activities (e.g., hiking, camping)?",
+"What is your preferred type of art (e.g., painting, sculpture, photography)?",
+"Have you ever participated in a team sport?",
+"How often do you visit museums or art galleries?",
+"Do you enjoy gardening or tending to plants?",
+"What is your preferred type of film (e.g., comedy, drama, science fiction)?",
+"How often do you visit your local library?",
+"What is your favorite childhood memory?",
+"How do you handle stress in your life?",
+"What motivates you to achieve your goals?",
+"Do you prefer to work independently or in a team?",
+"What is your favorite type of outdoor activity?",
+"What languages can you speak fluently?",
+"How do you like to spend your weekends?",
+"What is your favorite type of cuisine to cook at home?",
+"Have you ever lived in a different country?",
+"What is your dream travel destination?",
+"Do you have any unique talents or hobbies?",
+"What book has had the most significant impact on your life?",
+"How do you define success in your career?",
+"What is your favorite board game or card game?",
+"Have you ever participated in a charity run or walk?",
+"What is your favorite way to unwind after a long day?",
+"What historical figure do you admire the most?",
+"What is your favorite type of art or artistic expression?",
+"How do you like to celebrate special occasions?",
+"What is your preferred method of learning new things?",
+"What causes or social issues are you passionate about?",
+"What is your go-to comfort food?",
+"How do you stay organized in your daily life?",
+"What is your favorite season for outdoor activities?",
+"Do you believe in extraterrestrial life?",
+"What is your favorite type of exercise equipment at the gym?",
+"How do you stay up-to-date with current events?",
+"What is your favorite type of weather?",
+"What do you value most in your friendships?",
+"Do you have any specific career aspirations for the future?",
+"What is your favorite type of musical instrument?",
+"What is your preferred method of transportation for long trips?",
+"How do you handle disagreements or conflicts with others?",
+"What is your favorite form of relaxation (e.g., meditation, spa, yoga)?",
+"Do you have any personal mantras or life mottos?",
+"What technology or gadget can you not live without?",
+"How do you define happiness in your life?",
+"What is your favorite type of art medium (e.g., acrylic, watercolor)?",
+"What is your preferred style of dance (e.g., salsa, ballet)?",
+"Do you enjoy DIY projects or home improvement?",
+"What is your favorite childhood book or movie?",
+"How do you approach personal development and self-improvement?",
+"What is your favorite type of dessert?",
+"Have you ever participated in a charity or volunteer trip?",
+"What is your preferred method of communication with friends and family?",
+"How do you handle setbacks or challenges in your life?",
+"What is your favorite type of fictional genre (e.g., fantasy, sci-fi)?",
+"What is your preferred style of fashion?",
+"How do you like to give back to your community?",
+"What is your favorite type of natural landscape (e.g., mountains, beaches)?"
+
+
+        ];
+        words.sort();
+        let input = document.getElementById("input");
+        let suggestion = document.getElementById("suggestion");
+        // Enter key code
+        const enterKey = 13;
+
+        window.onload = () => {
+          input.value = "";
+          clearSuggestion();
+        };
+
+        const clearSuggestion = () => {
+          suggestion.innerHTML = "";
+        };
+
+        const caseCheck = (word) => {
+          // Array of characters
+          word = word.split("");
+          let inp = input.value;
+          // Loop through every character in inp
+          for (let i in inp) {
+            // If input character matches with character in word, no need to change
+            if (inp[i] == word[i]) {
+              continue;
+            } else if (inp[i].toUpperCase() == word[i]) {
+              // If inp[i] when converted to uppercase matches word[i], it means word[i] needs to be lowercase
+              word.splice(i, 1, word[i].toLowerCase());
+            } else {
+              // word[i] needs to be uppercase
+              word.splice(i, 1, word[i].toUpperCase());
+            }
+          }
+          // Array to string
+          return word.join("");
+        };
+
+        // Execute function on input
+        input.addEventListener("input", (e) => {
+          clearSuggestion();
+          // Convert input value to regex since string.startsWith() is case sensitive
+          let regex = new RegExp("^" + input.value, "i");
+          // Loop through words array
+          for (let i in words) {
+            // Check if input matches with any word in words array
+            if (regex.test(words[i]) && input.value != "") {
+              // Change the case of word in words array according to user input
+              words[i] = caseCheck(words[i]);
+              // Display suggestion
+              suggestion.innerHTML = words[i];
+              break;
+            }
+          }
+        });
+
+        // Complete predictive text on enter key
+        input.addEventListener("keydown", (e) => {
+          // When the user presses enter and a suggestion exists
+          if (e.keyCode == enterKey && suggestion.innerText != "") {
+            e.preventDefault();
+            input.value = suggestion.innerText;
+            // Clear the suggestion
+            clearSuggestion();
+          }
+        });
+
+        // Your additional script can be added here
+    </script>
+
+
+
+
+{% endblock %}
